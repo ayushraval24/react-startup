@@ -1,24 +1,32 @@
-import logo from './logo.svg';
-import './App.css';
+import { Provider as ReduxProvider } from "react-redux";
+import { ToastContainer, Zoom } from "react-toastify";
+import { createStore, applyMiddleware } from "redux";
+import reduxThunk from "redux-thunk";
+import Routes from "./routes";
+import reducers from "./reducers";
+import { setupInterceptors } from "./actions/api";
+
+const createStoreWithMiddleware = applyMiddleware(reduxThunk)(createStore);
+
+const store = createStoreWithMiddleware(reducers);
+
+setupInterceptors(store);
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <ReduxProvider store={store}>
+      <Routes />
+      <ToastContainer
+        position="top-left"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={true}
+        closeOnClick
+        pauseOnHover
+        transition={Zoom}
+        className="toast-container-custom"
+      />
+    </ReduxProvider>
   );
 }
 
