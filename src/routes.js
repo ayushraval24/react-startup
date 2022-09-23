@@ -4,7 +4,7 @@ import { connect } from "react-redux";
 import Home from "./pages/Home";
 import Form from "./components/Form";
 
-const AuthRouteComp = ({ component: Component, ...rest }) => {
+const PrivateRoute = ({ component: Component, ...rest }) => {
   const hasAuthAccessToken = localStorage.getItem("loginAccessToken");
 
   return (
@@ -25,10 +25,29 @@ const AuthRouteComp = ({ component: Component, ...rest }) => {
   );
 };
 
+const PublicRoute = ({ component: Component, ...rest }) => {
+  const hasAuthAccessToken = localStorage.getItem("loginAccessToken");
+  return (
+    <Route
+      {...rest}
+      render={(props) => {
+        return !hasAuthAccessToken ? (
+          <Component {...props} />
+        ) : (
+          <Navigate to="/home" />
+        );
+      }}
+    />
+  );
+};
+
 const routes = () => {
   return (
     <BrowserRouter>
       <Routes>
+        {/* <PublicRoute path="/" element={<Login />} />
+        <PrivateRoute path="/" element={<Home />} />
+        <PrivateRoute path="/form" element={<Form />} /> */}
         <Route path="/" element={<Home />} />
         <Route path="/form" element={<Form />} />
       </Routes>
